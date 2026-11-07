@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8"/>
+<title>ActualArrow — BAMod concept preview</title>
+<style>
+  @font-face { font-family: InterLocal; src: local("Inter"), local("Segoe UI"); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    background:
+      radial-gradient(1200px 600px at 20% 0%, #2a2418 0%, transparent 55%),
+      radial-gradient(900px 500px at 90% 100%, #1a2228 0%, transparent 50%),
+      #0e0f12;
+    color: #E9EAEC; font-family: InterLocal, "Segoe UI", system-ui, sans-serif;
+  }
+  .stage { display: grid; gap: 18px; justify-items: center; padding: 28px; }
+  .label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #969AA3; }
+  .win {
+    width: 480px; height: 640px; background: #1D1F23; border-radius: 12px;
+    border: 1px solid #3A3D45; box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    padding: 22px 28px 18px; display: flex; flex-direction: column; gap: 0;
+  }
+  .brand-row { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+  .logo {
+    width: 52px; height: 52px; border-radius: 8px; background: #23252A;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .logo img { width: 100%; height: 100%; object-fit: cover; }
+  .eyebrow { color: #E2A23A; font-size: 11px; font-weight: 650; letter-spacing: 1.2px; }
+  .title { font-size: 20px; font-weight: 750; margin-top: -1px; }
+  .card {
+    background: #23252A; border-radius: 8px; padding: 16px;
+    display: grid; grid-template-columns: 118px 1fr; gap: 16px; margin-bottom: 14px;
+  }
+  .preview {
+    width: 118px; height: 118px; border-radius: 6px; background: #181A1E;
+    display: grid; place-items: center; color: #969AA3; font-size: 32px;
+  }
+  .kicker { color: #969AA3; font-size: 11px; font-weight: 650; }
+  .pack-name { font-size: 16px; font-weight: 750; margin: 4px 0 2px; display: flex; justify-content: space-between; }
+  .muted { color: #969AA3; font-size: 12.5px; }
+  .chip {
+    display: inline-flex; margin-top: 8px; padding: 3px 8px; border-radius: 999px;
+    background: rgba(76,194,110,.14); color: #4CC26E; font-size: 11px; font-weight: 650;
+  }
+  .play {
+    height: 56px; border: 0; border-radius: 8px; background: #E2A23A; color: #1B1407;
+    font-weight: 750; font-size: 15px; cursor: pointer; width: 100%; margin-bottom: 8px;
+  }
+  .play:hover { background: #F0B656; }
+  .secondary {
+    height: 40px; width: 100%; border-radius: 8px; border: 1px solid #3A3D45;
+    background: #2A2D33; color: #E9EAEC; cursor: pointer; margin-bottom: 8px;
+  }
+  .secondary:hover { background: #34373E; }
+  .subtitle { color: #969AA3; font-size: 12.5px; line-height: 1.35; min-height: 34px; }
+  .grow { flex: 1; }
+  .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .ghost {
+    border: 0; background: transparent; color: #969AA3; cursor: pointer;
+    padding: 8px 10px; border-radius: 8px; font-size: 13px;
+  }
+  .ghost:hover { background: #2A2D33; color: #E9EAEC; }
+  .notes {
+    width: min(720px, 92vw); color: #a7abb3; font-size: 13px; line-height: 1.5;
+    background: rgba(255,255,255,.03); border: 1px solid #2a2d33; border-radius: 10px; padding: 14px 16px;
+  }
+  .notes code { color: #E2A23A; }
+  .compare { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { font-size: 11px; padding: 4px 8px; border-radius: 999px; background: #23252A; border: 1px solid #3A3D45; }
+</style>
+<body>
+  <div class="stage">
+    <div class="label">Concept preview · BAMod visual → ActualArrow Avalonia</div>
+    <div class="win">
+      <div class="brand-row">
+        <div class="logo">
+          <img src="../ActualArrow_UI/Assets/icon_256.png" alt="" onerror="this.remove()"/>
+        </div>
+        <div>
+          <div class="eyebrow">BROKEN ARROW</div>
+          <div class="title">Mod Launcher</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="preview">📦</div>
+        <div>
+          <div class="kicker">MODPACK</div>
+          <div class="pack-name"><span>Actual Arrow Pack</span><span class="muted">▾</span></div>
+          <div class="muted">Installed v0.1.1 · Latest v0.1.1</div>
+          <div class="chip">Up to date</div>
+        </div>
+      </div>
+
+      <button class="play">▶&nbsp;&nbsp;PLAY</button>
+      <button class="secondary">Play vanilla with no mods</button>
+      <div class="subtitle">Ready to launch with MelonLoader and selected pack.</div>
+      <div class="grow"></div>
+      <div class="footer">
+        <button class="ghost">⚙&nbsp;&nbsp;Settings</button>
+        <div class="muted">ActualArrow 0.1.1</div>
+      </div>
+    </div>
+
+    <div class="notes">
+      Файлы концепта: <code>Concept/Theme/*</code> + <code>Concept/Views/MainWindow.axaml</code>.
+      <div class="compare">
+        <span class="tag">480×640 fixed</span>
+        <span class="tag">graphite #1D1F23</span>
+        <span class="tag">accent #E2A23A</span>
+        <span class="tag">radius 8</span>
+        <span class="tag">Inter / brand eyebrow</span>
+        <span class="tag">pack card 118×118</span>
+        <span class="tag">no wide hero banner</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

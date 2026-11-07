@@ -1,0 +1,64 @@
+<!-- Concept: BAMod visual language ported into ActualArrow token names -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Color x:Key="ActualArrow.Color.Background">#1D1F23</Color>
+  <Color x:Key="ActualArrow.Color.Panel">#23252A</Color>
+  <Color x:Key="ActualArrow.Color.PanelRaised">#2A2D33</Color>
+  <Color x:Key="ActualArrow.Color.PanelSunken">#181A1E</Color>
+  <Color x:Key="ActualArrow.Color.Border">#3A3D45</Color>
+  <Color x:Key="ActualArrow.Color.BorderStrong">#4A4E58</Color>
+  <Color x:Key="ActualArrow.Color.Text">#E9EAEC</Color>
+  <Color x:Key="ActualArrow.Color.Muted">#969AA3</Color>
+  <Color x:Key="ActualArrow.Color.Accent">#E2A23A</Color>
+  <Color x:Key="ActualArrow.Color.AccentHover">#F0B656</Color>
+  <Color x:Key="ActualArrow.Color.AccentPressed">#C98B2A</Color>
+  <Color x:Key="ActualArrow.Color.OnAccent">#1B1407</Color>
+  <Color x:Key="ActualArrow.Color.Danger">#E55B52</Color>
+  <Color x:Key="ActualArrow.Color.Warning">#F0B656</Color>
+  <Color x:Key="ActualArrow.Color.Ok">#4CC26E</Color>
+  <Color x:Key="ActualArrow.Color.Sidebar">#151619</Color>
+
+  <SolidColorBrush x:Key="ActualArrow.Background" Color="{StaticResource ActualArrow.Color.Background}"/>
+  <SolidColorBrush x:Key="ActualArrow.Panel" Color="{StaticResource ActualArrow.Color.Panel}"/>
+  <SolidColorBrush x:Key="ActualArrow.PanelRaised" Color="{StaticResource ActualArrow.Color.PanelRaised}"/>
+  <SolidColorBrush x:Key="ActualArrow.PanelSunken" Color="{StaticResource ActualArrow.Color.PanelSunken}"/>
+  <SolidColorBrush x:Key="ActualArrow.Border" Color="{StaticResource ActualArrow.Color.Border}"/>
+  <SolidColorBrush x:Key="ActualArrow.BorderStrong" Color="{StaticResource ActualArrow.Color.BorderStrong}"/>
+  <SolidColorBrush x:Key="ActualArrow.Text" Color="{StaticResource ActualArrow.Color.Text}"/>
+  <SolidColorBrush x:Key="ActualArrow.Muted" Color="{StaticResource ActualArrow.Color.Muted}"/>
+  <SolidColorBrush x:Key="ActualArrow.Accent" Color="{StaticResource ActualArrow.Color.Accent}"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentHover" Color="{StaticResource ActualArrow.Color.AccentHover}"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentPressed" Color="{StaticResource ActualArrow.Color.AccentPressed}"/>
+  <SolidColorBrush x:Key="ActualArrow.OnAccent" Color="{StaticResource ActualArrow.Color.OnAccent}"/>
+  <SolidColorBrush x:Key="ActualArrow.Danger" Color="{StaticResource ActualArrow.Color.Danger}"/>
+  <SolidColorBrush x:Key="ActualArrow.Warning" Color="{StaticResource ActualArrow.Color.Warning}"/>
+  <SolidColorBrush x:Key="ActualArrow.Ok" Color="{StaticResource ActualArrow.Color.Ok}"/>
+  <SolidColorBrush x:Key="ActualArrow.Sidebar" Color="{StaticResource ActualArrow.Color.Sidebar}"/>
+
+  <SolidColorBrush x:Key="ActualArrow.OkTint" Color="#4CC26E" Opacity="0.14"/>
+  <SolidColorBrush x:Key="ActualArrow.WarningTint" Color="#F0B656" Opacity="0.14"/>
+  <SolidColorBrush x:Key="ActualArrow.DangerTint" Color="#E55B52" Opacity="0.14"/>
+  <SolidColorBrush x:Key="ActualArrow.MutedTint" Color="#969AA3" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentTint" Color="#E2A23A" Opacity="0.14"/>
+  <SolidColorBrush x:Key="ActualArrow.HazardDark" Color="#1B1407"/>
+  <SolidColorBrush x:Key="ActualArrow.HazardLight" Color="#E2A23A"/>
+
+  <!-- Softer than current 4px; closer to BAMod round controls -->
+  <CornerRadius x:Key="ActualArrow.Radius">8</CornerRadius>
+  <CornerRadius x:Key="ActualArrow.Radius.Sm">6</CornerRadius>
+  <CornerRadius x:Key="ActualArrow.Radius.Pill">999</CornerRadius>
+
+  <!-- Prefer Inter (BAMod). Keep Sora only if Inter assets are not shipped. -->
+  <FontFamily x:Key="ActualArrow.Font.Heading">avares://ActualArrowLauncher/Assets/Fonts#Inter, Sora, Segoe UI, $Default</FontFamily>
+  <FontFamily x:Key="ActualArrow.Font.Body">avares://ActualArrowLauncher/Assets/Fonts#Inter, Segoe UI, $Default</FontFamily>
+  <FontFamily x:Key="ActualArrow.Font.Brand">avares://ActualArrowLauncher/Assets/Fonts#Inter, Sora, Segoe UI, $Default</FontFamily>
+
+  <Color x:Key="SystemAccentColor">#E2A23A</Color>
+  <Color x:Key="SystemAccentColorLight1">#F0B656</Color>
+  <Color x:Key="SystemAccentColorLight2">#F6C97A</Color>
+  <Color x:Key="SystemAccentColorLight3">#FBE0A8</Color>
+  <Color x:Key="SystemAccentColorDark1">#C98B2A</Color>
+  <Color x:Key="SystemAccentColorDark2">#A87322</Color>
+  <Color x:Key="SystemAccentColorDark3">#7A5418</Color>
+</ResourceDictionary>

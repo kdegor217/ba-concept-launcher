@@ -1,0 +1,179 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ConceptApp.ViewModels"
+        x:Class="ConceptApp.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/app.ico"
+        Title="Broken Arrow"
+        Width="{Binding WindowWidth}"
+        Height="{Binding WindowHeight}"
+        SizeToContent="{Binding WindowSizeToContent}"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AA.BackgroundBrush}"
+        Foreground="{DynamicResource AA.TextBrush}"
+        FontFamily="Inter, Segoe UI, $Default"
+        FontSize="13">
+
+  <Panel>
+    <Image Source="avares://ConceptApp/Assets/header.png"
+           Stretch="UniformToFill" Opacity="0.48"
+           IsVisible="{Binding IsLayoutB}">
+      <Image.Effect>
+        <BlurEffect Radius="48"/>
+      </Image.Effect>
+    </Image>
+    <Border Background="#C21D1F23" IsVisible="{Binding IsLayoutB}"/>
+
+    <!-- Concept B -->
+    <Grid IsVisible="{Binding IsLayoutB}" RowDefinitions="Auto,*,Auto" Margin="28,22,28,16">
+      <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
+        <Border Width="48" Height="48" CornerRadius="8" ClipToBounds="True"
+                Background="{DynamicResource AA.PanelBrush}"
+                BorderBrush="{DynamicResource AA.BorderBrush}" BorderThickness="1">
+          <Image Source="avares://ConceptApp/Assets/icon_256.png" Stretch="UniformToFill"/>
+        </Border>
+        <StackPanel VerticalAlignment="Center" Spacing="1">
+          <TextBlock Classes="brand" Text="BROKEN ARROW"/>
+          <TextBlock Classes="title" FontSize="18" Text="{Binding BrandSub}"/>
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel Grid.Row="1">
+        <Border Background="#E023252A" BorderBrush="#B33A3D45" BorderThickness="1"
+                CornerRadius="8" Padding="14" Margin="0,0,0,16">
+          <Grid ColumnDefinitions="96,*">
+            <Border Width="96" Height="96" CornerRadius="6" ClipToBounds="True"
+                    Background="{DynamicResource AA.PanelBrush}">
+              <Image Source="{Binding Preview}" Stretch="UniformToFill"/>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center" Spacing="2">
+              <TextBlock Classes="muted" FontSize="11" FontWeight="SemiBold" Text="{Binding ModpackLabel}"/>
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <Button Classes="ghost pack" Padding="0" MinHeight="24" Command="{Binding CyclePackCommand}">
+                  <TextBlock Text="{Binding PackName}" FontSize="16" FontWeight="Bold"
+                             TextTrimming="CharacterEllipsis"/>
+                </Button>
+                <Button Classes="ghost pack" Padding="4,0" MinHeight="24" MinWidth="22">
+                  <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                      <MenuItem Header="release" Command="{Binding SelectBranchCommand}" CommandParameter="release"/>
+                      <MenuItem Header="beta" Command="{Binding SelectBranchCommand}" CommandParameter="beta"/>
+                      <MenuItem Header="dev" Command="{Binding SelectBranchCommand}" CommandParameter="dev"/>
+                    </MenuFlyout>
+                  </Button.Flyout>
+                  <TextBlock Classes="muted" Text="▾" FontSize="11"/>
+                </Button>
+              </StackPanel>
+              <TextBlock Classes="muted" FontSize="12" Text="{Binding PackMetaLine}"/>
+              <Border Margin="0,8,0,0" HorizontalAlignment="Left" CornerRadius="999" Padding="8,3"
+                      Classes.chipok="{Binding !UpdateAvailable}"
+                      Classes.chipwarn="{Binding UpdateAvailable}">
+                <TextBlock FontSize="11" FontWeight="SemiBold" Text="{Binding ChipText}"/>
+              </Border>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <!-- Play + settings gear on one row; Vanilla under Play -->
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <StackPanel>
+            <Button Classes="primary" HorizontalAlignment="Stretch"
+                    Content="{Binding PlayLabel}" Command="{Binding PlayCommand}"/>
+            <Button Classes="ghost link" HorizontalAlignment="Center" Margin="0,10,0,0"
+                    Content="{Binding VanillaLabel}" Command="{Binding VanillaCommand}"/>
+          </StackPanel>
+          <Button Grid.Column="1" Classes="ghost icon" VerticalAlignment="Center"
+                  Width="48" Height="48" MinWidth="48" MinHeight="48" Padding="0"
+                  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  Content="⚙" Command="{Binding SettingsCommand}"
+                  ToolTip.Tip="{Binding SettingsTip}"/>
+        </Grid>
+
+        <StackPanel Margin="0,16,0,0" Spacing="8" IsVisible="{Binding IsBusy}">
+          <ProgressBar Height="3" Minimum="0" Maximum="100" Value="{Binding Progress}"
+                       Foreground="{DynamicResource AA.AccentBrush}"
+                       Background="{DynamicResource AA.PanelBrush}"/>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Classes="muted" FontSize="12" Text="{Binding ProgressText}"/>
+            <Button Grid.Column="1" Classes="ghost link" Content="{Binding CancelLabel}"
+                    Command="{Binding CancelCommand}" Padding="0" MinHeight="20"/>
+          </Grid>
+        </StackPanel>
+      </StackPanel>
+
+      <!-- Footer: status only -->
+      <TextBlock Grid.Row="2" Classes="muted" FontSize="12" Margin="0,8,0,0"
+                 Text="{Binding Status}" TextTrimming="CharacterEllipsis"
+                 VerticalAlignment="Center" HorizontalAlignment="Center"
+                 IsVisible="{Binding !IsBusy}"/>
+    </Grid>
+
+    <!-- Concept D: content-hugging bar (Window SizeToContent=WidthAndHeight) -->
+    <StackPanel IsVisible="{Binding IsLayoutD}" HorizontalAlignment="Left">
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="10,6"
+                  VerticalAlignment="Center" HorizontalAlignment="Left">
+        <Border Width="40" Height="40" CornerRadius="6" ClipToBounds="True"
+                Background="{DynamicResource AA.PanelBrush}"
+                VerticalAlignment="Center">
+          <Image Source="avares://ConceptApp/Assets/icon_256.png" Stretch="UniformToFill"/>
+        </Border>
+
+        <StackPanel VerticalAlignment="Center" Spacing="2" Margin="0,0,4,0">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button Classes="ghost pack" Padding="0" MinHeight="22" Command="{Binding CyclePackCommand}">
+              <TextBlock Text="{Binding PackName}" FontSize="14" FontWeight="SemiBold"/>
+            </Button>
+            <Button Classes="ghost pack" Padding="2,0" MinHeight="22" MinWidth="18">
+              <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                  <MenuItem Header="release" Command="{Binding SelectBranchCommand}" CommandParameter="release"/>
+                  <MenuItem Header="beta" Command="{Binding SelectBranchCommand}" CommandParameter="beta"/>
+                  <MenuItem Header="dev" Command="{Binding SelectBranchCommand}" CommandParameter="dev"/>
+                </MenuFlyout>
+              </Button.Flyout>
+              <TextBlock Classes="muted" Text="▾" FontSize="11"/>
+            </Button>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Classes="muted" FontSize="12" Text="{Binding PackMetaLine}"
+                       VerticalAlignment="Center"/>
+            <Border CornerRadius="999" Padding="8,3" VerticalAlignment="Center"
+                    Classes.chipok="{Binding !UpdateAvailable}"
+                    Classes.chipwarn="{Binding UpdateAvailable}">
+              <TextBlock FontSize="11" FontWeight="SemiBold" Text="{Binding ChipText}"/>
+            </Border>
+          </StackPanel>
+        </StackPanel>
+
+        <!-- Action cluster: shared 40px row height so gear centers with Play/Vanilla -->
+        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Height="40">
+          <Button Classes="primary compact" VerticalAlignment="Center" Height="40"
+                  Content="{Binding PlayLabel}" Command="{Binding PlayCommand}"/>
+          <Button Classes="secondary compact" VerticalAlignment="Center" Height="40"
+                  Content="{Binding VanillaLabel}" Command="{Binding VanillaCommand}"/>
+          <Button Classes="ghost icon" VerticalAlignment="Center"
+                  Width="40" Height="40" MinWidth="40" MinHeight="40" Padding="0"
+                  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  Content="⚙" Command="{Binding SettingsCommand}" ToolTip.Tip="{Binding SettingsTip}"/>
+        </StackPanel>
+      </StackPanel>
+
+      <Border IsVisible="{Binding IsBusy}"
+              BorderBrush="{DynamicResource AA.BorderBrush}" BorderThickness="0,1,0,0"
+              Background="#181A1E" Padding="10,8">
+        <StackPanel Spacing="6">
+          <ProgressBar Height="3" Minimum="0" Maximum="100" Value="{Binding Progress}"
+                       Foreground="{DynamicResource AA.AccentBrush}"
+                       Background="{DynamicResource AA.PanelBrush}"/>
+          <DockPanel LastChildFill="True">
+            <Button DockPanel.Dock="Right" Classes="ghost link" Content="{Binding CancelLabel}"
+                    Command="{Binding CancelCommand}" Padding="0" MinHeight="20" Margin="12,0,0,0"/>
+            <TextBlock Classes="muted" FontSize="12" Text="{Binding ProgressText}"
+                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+          </DockPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Panel>
+</Window>

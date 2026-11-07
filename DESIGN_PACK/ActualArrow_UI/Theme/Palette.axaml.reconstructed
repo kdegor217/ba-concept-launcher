@@ -1,0 +1,63 @@
+<!--
+  Reconstructed from compiled XamlIl (Theme/Palette.axaml).
+  Source: ActualArrowLauncher 0.1.1 / Avalonia 11.3.22
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Core colors -->
+  <Color x:Key="ActualArrow.Color.Background">#050709</Color>
+  <Color x:Key="ActualArrow.Color.Panel">#101216</Color>
+  <Color x:Key="ActualArrow.Color.PanelRaised">#171A1F</Color>
+  <Color x:Key="ActualArrow.Color.PanelSunken">#0A0C0F</Color>
+  <Color x:Key="ActualArrow.Color.Border">#22252B</Color>
+  <Color x:Key="ActualArrow.Color.BorderStrong">#343841</Color>
+  <Color x:Key="ActualArrow.Color.Text">#F1F1F1</Color>
+  <Color x:Key="ActualArrow.Color.Muted">#9AA0A8</Color>
+  <Color x:Key="ActualArrow.Color.Accent">#EE9035</Color>
+  <Color x:Key="ActualArrow.Color.AccentHover">#F5A65A</Color>
+  <Color x:Key="ActualArrow.Color.AccentPressed">#D27A22</Color>
+  <Color x:Key="ActualArrow.Color.OnAccent">#050709</Color>
+  <Color x:Key="ActualArrow.Color.Danger">#D2493A</Color>
+  <Color x:Key="ActualArrow.Color.Warning">#E8B84A</Color>
+  <Color x:Key="ActualArrow.Color.Ok">#6FB35A</Color>
+
+  <!-- Brushes -->
+  <SolidColorBrush x:Key="ActualArrow.Background" Color="{StaticResource ActualArrow.Color.Background}"/>
+  <SolidColorBrush x:Key="ActualArrow.Panel" Color="{StaticResource ActualArrow.Color.Panel}"/>
+  <SolidColorBrush x:Key="ActualArrow.PanelRaised" Color="{StaticResource ActualArrow.Color.PanelRaised}"/>
+  <SolidColorBrush x:Key="ActualArrow.PanelSunken" Color="{StaticResource ActualArrow.Color.PanelSunken}"/>
+  <SolidColorBrush x:Key="ActualArrow.Border" Color="{StaticResource ActualArrow.Color.Border}"/>
+  <SolidColorBrush x:Key="ActualArrow.BorderStrong" Color="{StaticResource ActualArrow.Color.BorderStrong}"/>
+  <SolidColorBrush x:Key="ActualArrow.Text" Color="{StaticResource ActualArrow.Color.Text}"/>
+  <SolidColorBrush x:Key="ActualArrow.Muted" Color="{StaticResource ActualArrow.Color.Muted}"/>
+  <SolidColorBrush x:Key="ActualArrow.Accent" Color="{StaticResource ActualArrow.Color.Accent}"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentHover" Color="{StaticResource ActualArrow.Color.AccentHover}"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentPressed" Color="{StaticResource ActualArrow.Color.AccentPressed}"/>
+  <SolidColorBrush x:Key="ActualArrow.OnAccent" Color="{StaticResource ActualArrow.Color.OnAccent}"/>
+  <SolidColorBrush x:Key="ActualArrow.Danger" Color="{StaticResource ActualArrow.Color.Danger}"/>
+  <SolidColorBrush x:Key="ActualArrow.Warning" Color="{StaticResource ActualArrow.Color.Warning}"/>
+  <SolidColorBrush x:Key="ActualArrow.Ok" Color="{StaticResource ActualArrow.Color.Ok}"/>
+
+  <SolidColorBrush x:Key="ActualArrow.OkTint" Color="#6FB35A" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.WarningTint" Color="#E8B84A" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.DangerTint" Color="#D2493A" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.MutedTint" Color="#9AA0A8" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.AccentTint" Color="#EE9035" Opacity="0.12"/>
+  <SolidColorBrush x:Key="ActualArrow.HazardDark" Color="#050709"/>
+  <SolidColorBrush x:Key="ActualArrow.HazardLight" Color="#EE9035"/>
+
+  <CornerRadius x:Key="ActualArrow.Radius">4</CornerRadius>
+
+  <FontFamily x:Key="ActualArrow.Font.Heading">avares://ActualArrowLauncher/Assets/Fonts#Sora, Montserrat, Segoe UI, $Default</FontFamily>
+  <FontFamily x:Key="ActualArrow.Font.Body">Segoe UI, $Default</FontFamily>
+
+  <!-- Fluent SystemAccent overrides -->
+  <Color x:Key="SystemAccentColor">#EE9035</Color>
+  <Color x:Key="SystemAccentColorLight1">#F5A65A</Color>
+  <Color x:Key="SystemAccentColorLight2">#F8B67E</Color>
+  <Color x:Key="SystemAccentColorLight3">#FBC6A2</Color>
+  <Color x:Key="SystemAccentColorDark1">#D27A22</Color>
+  <Color x:Key="SystemAccentColorDark2">#B0681C</Color>
+  <Color x:Key="SystemAccentColorDark3">#8E5416</Color>
+</ResourceDictionary>

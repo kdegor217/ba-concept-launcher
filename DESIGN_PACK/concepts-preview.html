@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Broken Arrow — 4 launcher concepts</title>
+<style>
+  :root {
+    --bg: #0e0f12;
+    --graphite: #1D1F23;
+    --panel: #23252A;
+    --surface: #2A2D33;
+    --hover: #34373E;
+    --border: #3A3D45;
+    --text: #E9EAEC;
+    --muted: #969AA3;
+    --accent: #E2A23A;
+    --accent-h: #F0B656;
+    --on-accent: #1B1407;
+    --ok: #4CC26E;
+    --font: Inter, "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text);
+    font-family: var(--font);
+    background:
+      radial-gradient(1100px 520px at 12% -10%, #2a2418 0%, transparent 55%),
+      radial-gradient(900px 480px at 88% 110%, #1a2228 0%, transparent 50%),
+      var(--bg);
+  }
+  .page { max-width: 1480px; margin: 0 auto; padding: 28px 24px 64px; }
+
+  header.top {
+    display: flex; flex-wrap: wrap; gap: 16px 28px;
+    align-items: end; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  h1 { margin: 0; font-size: 26px; font-weight: 750; letter-spacing: -.02em; }
+  .sub { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 52ch; }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tabs button {
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .tabs button:hover { background: var(--hover); }
+  .tabs button.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+  .tabs button .rec {
+    display: inline-block; margin-left: 6px; font-size: 10px; letter-spacing: .04em;
+    padding: 1px 6px; border-radius: 999px; background: rgba(27,20,7,.18);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 28px;
+    align-items: start;
+  }
+  .gallery[data-show="A"] .slot:not([data-id="A"]),
+  .gallery[data-show="B"] .slot:not([data-id="B"]),
+  .gallery[data-show="C"] .slot:not([data-id="C"]),
+  .gallery[data-show="D"] .slot:not([data-id="D"]) { display: none; }
+  .gallery[data-show="A"],
+  .gallery[data-show="B"],
+  .gallery[data-show="C"] { grid-template-columns: 1fr; justify-items: center; }
+  .gallery[data-show="D"] { grid-template-columns: 1fr; }
+
+  .slot { display: grid; gap: 12px; justify-items: center; }
+  .slot-meta { width: min(100%, 480px); }
+  .slot[data-id="D"] .slot-meta { width: min(100%, 760px); }
+  .slot-meta h2 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+  .slot-meta p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 650; letter-spacing: .04em;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .badge.ok { color: var(--ok); }
+  .badge.warn { color: #E8B84A; }
+
+  /* ——— shared window chrome ——— */
+  .win {
+    position: relative;
+    background: var(--graphite);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 28px 70px rgba(0,0,0,.5);
+    overflow: hidden;
+    color: var(--text);
+  }
+  .chrome {
+    height: 28px; display: flex; align-items: center; justify-content: flex-end;
+    gap: 6px; padding: 0 10px; background: #151619; border-bottom: 1px solid #2a2d33;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #3A3D45; }
+
+  .muted { color: var(--muted); }
+  .play {
+    height: 56px; width: 100%; border: 0; border-radius: 8px;
+    background: var(--accent); color: var(--on-accent);
+    font-weight: 750; font-size: 15px; cursor: pointer; letter-spacing: .02em;
+  }
+  .play:hover { background: var(--accent-h); }
+  .play.sm { height: 40px; width: auto; padding: 0 22px; font-size: 13px; border-radius: 6px; }
+  .ghost-link {
+    display: block; text-align: center; margin-top: 10px;
+    background: none; border: 0; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .ghost-link:hover { color: var(--text); }
+  .footer-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    margin-top: auto; padding-top: 8px;
+  }
+  .icon-btn {
+    width: 32px; height: 32px; border: 0; border-radius: 6px;
+    background: transparent; color: var(--muted); cursor: pointer; font-size: 15px;
+  }
+  .icon-btn:hover { background: var(--surface); color: var(--text); }
+  .chip-ok {
+    display: inline-flex; margin-top: 8px; padding: 3px 8px; border-radius: 999px;
+    background: rgba(76,194,110,.14); color: var(--ok); font-size: 11px; font-weight: 650;
+  }
+  .thumb {
+    border-radius: 6px; background: #181A1E; overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* A — Compact Core */
+  .win-a { width: 400px; height: 480px; display: flex; flex-direction: column; }
+  .win-a .body { flex: 1; display: flex; flex-direction: column; padding: 20px 28px 16px; }
+  .brand-stack { margin-bottom: 18px; }
+  .brand-stack .b { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 1.4px; }
+  .brand-stack .t { font-size: 22px; font-weight: 750; margin-top: 2px; }
+  .pack-row { display: grid; grid-template-columns: 72px 1fr; gap: 14px; margin-bottom: 28px; }
+  .pack-row .thumb { width: 72px; height: 72px; }
+  .pack-name { font-size: 15px; font-weight: 650; display: flex; align-items: center; gap: 4px; }
+  .pack-name span.chev { color: var(--muted); font-size: 11px; }
+  .pack-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* B — Mission Atmosphere */
+  .win-b { width: 420px; height: 520px; display: flex; flex-direction: column; }
+  .win-b .art {
+    position: absolute; inset: 28px 0 0 0; background:
+      url("ConceptApp/Assets/header.png") center/cover no-repeat;
+    filter: blur(28px); transform: scale(1.12); opacity: .45; pointer-events: none;
+  }
+  .win-b .veil {
+    position: absolute; inset: 28px 0 0 0; background: rgba(29,31,35,.78); pointer-events: none;
+  }
+  .win-b .body {
+    position: relative; z-index: 1; flex: 1;
+    display: flex; flex-direction: column; padding: 22px 28px 16px;
+  }
+  .win-b .brand-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+  .win-b .logo {
+    width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: var(--panel);
+    border: 1px solid rgba(58,61,69,.6);
+  }
+  .win-b .logo img { width: 100%; height: 100%; object-fit: cover; }
+  .win-b .pack-card {
+    background: rgba(35,37,42,.88); border: 1px solid rgba(58,61,69,.7);
+    border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 96px 1fr; gap: 14px;
+    margin-bottom: 16px; backdrop-filter: blur(8px);
+  }
+  .win-b .pack-card .thumb { width: 96px; height: 96px; }
+  .win-b .kicker { font-size: 11px; font-weight: 650; color: var(--muted); letter-spacing: .06em; }
+  .win-b .pname { font-size: 16px; font-weight: 750; margin: 4px 0 2px; }
+
+  /* C — Pack Studio */
+  .win-c { width: 480px; height: 640px; display: flex; flex-direction: column; }
+  .win-c .body { flex: 1; display: flex; flex-direction: column; padding: 24px 28px 18px; }
+  .win-c .eye { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 1.4px; margin-bottom: 14px; }
+  .win-c .hero-preview {
+    width: 100%; aspect-ratio: 1; max-height: 260px; border-radius: 10px;
+    overflow: hidden; background: #181A1E; margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+  .win-c .hero-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .win-c .display { font-size: 22px; font-weight: 750; letter-spacing: -.02em; }
+  .win-c .meta-line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 20px; }
+  .win-c .branch {
+    font-size: 11px; font-weight: 650; padding: 3px 8px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+  }
+
+  /* D — Tactical Bar */
+  .win-d { width: min(760px, 100%); }
+  .win-d .row {
+    display: grid; grid-template-columns: 40px 1fr auto auto auto;
+    gap: 14px; align-items: center; padding: 14px 16px;
+    min-height: 84px;
+  }
+  .win-d .logo {
+    width: 40px; height: 40px; border-radius: 6px; overflow: hidden; background: var(--panel);
+  }
+  .win-d .logo img { width: 100%; height: 100%; object-fit: cover; }
+  .win-d .pack { font-size: 14px; font-weight: 650; }
+  .win-d .pack .chev { color: var(--muted); font-size: 11px; margin-left: 4px; }
+  .win-d .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .win-d .expand {
+    border-top: 1px solid var(--border); padding: 12px 16px 14px;
+    background: #181A1E;
+  }
+  .win-d .bar {
+    height: 3px; border-radius: 2px; background: var(--panel); overflow: hidden; margin-bottom: 8px;
+  }
+  .win-d .bar > i {
+    display: block; height: 100%; width: 62%; background: var(--accent); border-radius: 2px;
+  }
+  .win-d .expand-meta {
+    display: flex; justify-content: space-between; font-size: 12px; color: var(--muted);
+  }
+
+  .legend {
+    margin-top: 36px; padding: 16px 18px; border: 1px solid var(--border);
+    border-radius: 10px; background: rgba(255,255,255,.02); max-width: 920px;
+  }
+  .legend h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+  .legend ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+  .legend code { color: var(--accent); font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="top">
+      <div>
+        <div class="eyebrow">DESIGN_PACK · visual concepts</div>
+        <h1>Четыре концепта лаунчера</h1>
+        <p class="sub">BAMod-палитра и ActualArrow-логика. Переключайте вкладки или смотрите все сразу.</p>
+      </div>
+      <div class="tabs" role="tablist">
+        <button type="button" class="active" data-show="all" aria-selected="true">Все</button>
+        <button type="button" data-show="A">A Compact<span class="rec">рек</span></button>
+        <button type="button" data-show="B">B Atmosphere</button>
+        <button type="button" data-show="C">C Studio</button>
+        <button type="button" data-show="D">D Bar</button>
+      </div>
+    </header>
+
+    <div class="gallery" data-show="all" id="gallery">
+
+      <!-- A -->
+      <article class="slot" data-id="A">
+        <div class="slot-meta">
+          <div class="badge ok">A · Compact Core · рекомендую</div>
+          <h2>400×480 · бренд → pack → PLAY</h2>
+          <p>Плотная колонка BAMod. Без hero. Один CTA.</p>
+        </div>
+        <div class="win win-a" aria-label="Concept A mockup">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="brand-stack">
+              <div class="b">BROKEN ARROW</div>
+              <div class="t">Launcher</div>
+            </div>
+            <div class="pack-row">
+              <div class="thumb"><img src="ConceptApp/Assets/preview.png" alt="" onerror="this.parentElement.textContent='AA'"/></div>
+              <div>
+                <div class="pack-name">Actual Arrow Pack <span class="chev">▾</span></div>
+                <div class="pack-meta">v0.1.1 · release</div>
+              </div>
+            </div>
+            <button class="play" type="button">Play</button>
+            <button class="ghost-link" type="button">Play without mods</button>
+            <div class="footer-row">
+              <button class="icon-btn" type="button" title="Settings">⚙</button>
+              <span class="muted" style="font-size:12px">Ready</span>
+              <span class="muted" style="font-size:11px;opacity:.7">0.1.1</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- B -->
+      <article class="slot" data-id="B">
+        <div class="slot-meta">
+          <div class="badge">B · Mission Atmosphere · сильный 2-й</div>
+          <h2>420×520 · blur header как фон</h2>
+          <p>Композиция A + art ActualArrow в атмосфере, не в layout.</p>
+        </div>
+        <div class="win win-b" aria-label="Concept B mockup">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="art"></div>
+          <div class="veil"></div>
+          <div class="body">
+            <div class="brand-row">
+              <div class="logo"><img src="ConceptApp/Assets/icon_256.png" alt="" onerror="this.remove()"/></div>
+              <div>
+                <div class="b" style="color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1.2px">BROKEN ARROW</div>
+                <div style="font-size:18px;font-weight:750">Mod Launcher</div>
+              </div>
+            </div>
+            <div class="pack-card">
+              <div class="thumb"><img src="ConceptApp/Assets/preview.png" alt="" onerror="this.parentElement.textContent='AA'"/></div>
+              <div>
+                <div class="kicker">MODPACK</div>
+                <div class="pname">Actual Arrow Pack</div>
+                <div class="muted" style="font-size:12.5px">Installed v0.1.1 · release</div>
+                <div class="chip-ok">Up to date</div>
+              </div>
+            </div>
+            <button class="play" type="button">▶&nbsp;&nbsp;PLAY</button>
+            <button class="ghost-link" type="button">Play vanilla with no mods</button>
+            <div class="footer-row">
+              <button class="icon-btn" type="button">⚙</button>
+              <span class="muted" style="font-size:12px">Ready to launch</span>
+              <span class="muted" style="font-size:11px;opacity:.7">0.1.1</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- C -->
+      <article class="slot" data-id="C">
+        <div class="slot-meta">
+          <div class="badge">C · Pack Studio · альтернатива</div>
+          <h2>480×640 · превью как якорь</h2>
+          <p>Имя пака — display. PLAY ниже, всё ещё один главный CTA.</p>
+        </div>
+        <div class="win win-c" aria-label="Concept C mockup">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="eye">BROKEN ARROW</div>
+            <div class="hero-preview">
+              <img src="ConceptApp/Assets/preview.png" alt="" onerror="this.parentElement.style.background='#23252A'"/>
+            </div>
+            <div class="display">Actual Arrow Pack</div>
+            <div class="meta-line">
+              <span class="branch">release ▾</span>
+              <span class="muted" style="font-size:12.5px">v0.1.1 installed</span>
+              <span class="chip-ok" style="margin:0">Up to date</span>
+            </div>
+            <button class="play" type="button">Play</button>
+            <button class="ghost-link" type="button">Play without mods</button>
+            <div class="footer-row">
+              <button class="icon-btn" type="button">⚙</button>
+              <span class="muted" style="font-size:12px">Ready</span>
+              <span class="muted" style="font-size:11px;opacity:.7">Launcher 0.1.1</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- D -->
+      <article class="slot" data-id="D">
+        <div class="slot-meta">
+          <div class="badge warn">D · Tactical Bar · power-user</div>
+          <h2>~760×112 idle · раскрытие на progress</h2>
+          <p>Лаунчер не занимает экран. State виден только когда идёт работа.</p>
+        </div>
+        <div class="win win-d" aria-label="Concept D mockup">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="row">
+            <div class="logo"><img src="ConceptApp/Assets/icon_256.png" alt="" onerror="this.remove()"/></div>
+            <div>
+              <div class="pack">Actual Arrow Pack<span class="chev">▾</span></div>
+              <div class="meta">release · v0.1.1</div>
+            </div>
+            <button class="play sm" type="button">Play</button>
+            <button class="ghost-link" type="button" style="margin:0;white-space:nowrap">Vanilla</button>
+            <button class="icon-btn" type="button">⚙</button>
+          </div>
+          <div class="expand">
+            <div class="bar"><i></i></div>
+            <div class="expand-meta">
+              <span>Applying mods…</span>
+              <span>Cancel</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <aside class="legend">
+      <h3>Токены</h3>
+      <ul>
+        <li>Background <code>#1D1F23</code> · Panel <code>#23252A</code> · Accent <code>#E2A23A</code> · OnAccent <code>#1B1407</code></li>
+        <li>Ассеты: <code>ConceptApp/Assets/{icon_256,preview,header}.png</code></li>
+        <li>Live Avalonia: <code>ConceptApp/bin/Release/net10.0/ConceptApp.exe</code> ≈ концепт A/B</li>
+      </ul>
+    </aside>
+  </div>
+
+  <script>
+    const gallery = document.getElementById("gallery");
+    document.querySelectorAll(".tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach((b) => {
+          b.classList.toggle("active", b === btn);
+          b.setAttribute("aria-selected", b === btn ? "true" : "false");
+        });
+        gallery.dataset.show = btn.dataset.show;
+      });
+    });
+  </script>
+</body>
+</html>

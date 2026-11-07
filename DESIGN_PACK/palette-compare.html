@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8"/>
+<title>BA Launchers — palette compare</title>
+<style>
+  :root { font-family: Inter, Segoe UI, system-ui, sans-serif; }
+  body { margin: 0; background: #111; color: #eee; }
+  h1 { font-size: 18px; font-weight: 600; margin: 0 0 8px; }
+  h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #999; margin: 0 0 12px; }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 28px; max-width: 1100px; margin: 0 auto; }
+  .col { border: 1px solid #333; border-radius: 12px; overflow: hidden; }
+  .head { padding: 16px 18px; border-bottom: 1px solid #333; }
+  .meta { font-size: 12px; color: #888; }
+  .swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 16px; }
+  .sw { border-radius: 8px; padding: 12px; min-height: 64px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid rgba(255,255,255,.06); }
+  .sw b { font-size: 12px; }
+  .sw span { font-size: 11px; opacity: .75; }
+  .mock { margin: 0 16px 16px; border-radius: 10px; padding: 18px; }
+  .brand { font-size: 11px; letter-spacing: .12em; font-weight: 600; margin-bottom: 2px; }
+  .title { font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+  .card { border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 72px 1fr; gap: 12px; margin-bottom: 12px; }
+  .thumb { border-radius: 6px; aspect-ratio: 1; }
+  .play { height: 48px; border-radius: 8px; display: grid; place-items: center; font-weight: 700; margin-bottom: 8px; }
+  .ghost { height: 36px; border-radius: 8px; display: grid; place-items: center; font-size: 13px; border: 1px solid; }
+  .note { grid-column: 1 / -1; padding: 0 28px 28px; color: #aaa; font-size: 13px; line-height: 1.45; max-width: 1100px; margin: 0 auto; }
+</style>
+<body>
+<div class="wrap">
+  <section class="col" style="background:#1D1F23">
+    <div class="head">
+      <h1>BAModLauncher (old / preferred)</h1>
+      <div class="meta">WinForms · Inter · 460×624 · accent #E2A23A</div>
+    </div>
+    <div class="swatches">
+      <div class="sw" style="background:#151619"><b>Sidebar</b><span>#151619</span></div>
+      <div class="sw" style="background:#1D1F23"><b>Background</b><span>#1D1F23</span></div>
+      <div class="sw" style="background:#23252A"><b>Panel</b><span>#23252A</span></div>
+      <div class="sw" style="background:#2A2D33"><b>Surface</b><span>#2A2D33</span></div>
+      <div class="sw" style="background:#3A3D45"><b>Border</b><span>#3A3D45</span></div>
+      <div class="sw" style="background:#E9EAEC;color:#111"><b>Text</b><span>#E9EAEC</span></div>
+      <div class="sw" style="background:#969AA3;color:#111"><b>Muted</b><span>#969AA3</span></div>
+      <div class="sw" style="background:#E2A23A;color:#1B1407"><b>Accent</b><span>#E2A23A</span></div>
+      <div class="sw" style="background:#4CC26E;color:#111"><b>Good</b><span>#4CC26E</span></div>
+      <div class="sw" style="background:#E55B52;color:#111"><b>Bad</b><span>#E55B52</span></div>
+    </div>
+    <div class="mock" style="background:#1D1F23;color:#E9EAEC">
+      <div class="brand" style="color:#E2A23A">BROKEN ARROW</div>
+      <div class="title">Mod Launcher</div>
+      <div class="card" style="background:#23252A">
+        <div class="thumb" style="background:#2A2D33"></div>
+        <div>
+          <div style="color:#969AA3;font-size:11px;font-weight:600">MODPACK</div>
+          <div style="font-size:16px;font-weight:700;margin:4px 0">Example Pack</div>
+          <div style="color:#969AA3;font-size:12px">v1.2.0 · 12 mods</div>
+        </div>
+      </div>
+      <div class="play" style="background:#E2A23A;color:#1B1407">▶  PLAY</div>
+      <div class="ghost" style="background:#2A2D33;border-color:#3A3D45;color:#E9EAEC">Play vanilla with no mods</div>
+    </div>
+  </section>
+
+  <section class="col" style="background:#050709">
+    <div class="head">
+      <h1>ActualArrowLauncher (current)</h1>
+      <div class="meta">Avalonia 11 · Sora/Montserrat · wide banner · accent #EE9035</div>
+    </div>
+    <div class="swatches">
+      <div class="sw" style="background:#050709"><b>Background</b><span>#050709</span></div>
+      <div class="sw" style="background:#101216"><b>Panel</b><span>#101216</span></div>
+      <div class="sw" style="background:#171A1F"><b>PanelRaised</b><span>#171A1F</span></div>
+      <div class="sw" style="background:#0A0C0F"><b>PanelSunken</b><span>#0A0C0F</span></div>
+      <div class="sw" style="background:#22252B"><b>Border</b><span>#22252B</span></div>
+      <div class="sw" style="background:#F1F1F1;color:#111"><b>Text</b><span>#F1F1F1</span></div>
+      <div class="sw" style="background:#9AA0A8;color:#111"><b>Muted</b><span>#9AA0A8</span></div>
+      <div class="sw" style="background:#EE9035;color:#050709"><b>Accent</b><span>#EE9035</span></div>
+      <div class="sw" style="background:#6FB35A;color:#111"><b>Ok</b><span>#6FB35A</span></div>
+      <div class="sw" style="background:#D2493A;color:#111"><b>Danger</b><span>#D2493A</span></div>
+    </div>
+    <div class="mock" style="background:#050709;color:#F1F1F1">
+      <div style="height:64px;border-radius:6px;background:linear-gradient(90deg,#171A1F,#22252B);margin-bottom:12px;display:grid;place-items:center;color:#9AA0A8;font-size:12px">header.png banner</div>
+      <div class="card" style="background:#101216;border:1px solid #22252B">
+        <div class="thumb" style="background:#171A1F"></div>
+        <div>
+          <div style="font-size:15px;font-weight:700">Pack picker ▾</div>
+          <div style="color:#9AA0A8;font-size:12px;margin-top:4px">installed version · chip</div>
+        </div>
+      </div>
+      <div class="play" style="background:#EE9035;color:#050709">Play Modded</div>
+      <div class="ghost" style="background:#101216;border-color:#343841;color:#F1F1F1">Play Vanilla</div>
+    </div>
+  </section>
+</div>
+<p class="note">
+  Откройте этот файл в браузере. Полный бриф и исходники: <code>VISUAL_BRIEF.md</code>.
+  Концепт для разработчиков Avalonia: взять композицию/плотность/Inter/графит из BAMod и перенести в Theme/Palette + MainWindow.axaml текущего ActualArrow.
+</p>
+</body>
+</html>

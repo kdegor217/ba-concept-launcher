@@ -1,0 +1,186 @@
+<!--
+  Concept MainWindow — BAMod composition on ActualArrow ViewModel bindings.
+  Window ~480×640, no wide header banner as hero. Header art optional under brand.
+  Keep x:Name values so existing MainWindow.cs InitializeComponent finds them.
+-->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ActualArrow.App.ViewModels"
+        xmlns:svc="using:ActualArrow.App.Services"
+        x:Class="ActualArrow.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{DynamicResource App.Title}"
+        Width="480" Height="640"
+        MinWidth="460" MinHeight="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource ActualArrow.Background}"
+        Foreground="{DynamicResource ActualArrow.Text}"
+        FontFamily="{DynamicResource ActualArrow.Font.Body}"
+        FontSize="13">
+
+  <Grid RowDefinitions="Auto,*,Auto" Margin="28,22,28,18">
+
+    <!-- Brand header (BAMod: logo + BROKEN ARROW + Mod Launcher) -->
+    <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Margin="0,0,0,16">
+      <Border Width="52" Height="52" CornerRadius="8" ClipToBounds="True"
+              Background="{DynamicResource ActualArrow.Panel}">
+        <Image Source="avares://ActualArrowLauncher/Assets/icon_256.png"
+               Stretch="UniformToFill"/>
+      </Border>
+      <StackPanel Grid.Column="1" Margin="14,2,0,0" VerticalAlignment="Center" Spacing="0">
+        <TextBlock Classes="brand" Text="BROKEN ARROW"/>
+        <TextBlock Classes="title" Text="Mod Launcher" Margin="0,-2,0,0"/>
+      </StackPanel>
+
+      <!-- Keep Header/HeaderImage for code-behind Size/Fit helpers; collapse wide banner -->
+      <Border x:Name="Header" IsVisible="False">
+        <Image x:Name="HeaderImage" IsVisible="False"/>
+      </Border>
+    </Grid>
+
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+
+      <!-- Status banner (compact, not hero) -->
+      <Border x:Name="Banner" Grid.Row="0" Classes="banner" Margin="0,0,0,12"
+              IsVisible="{Binding HasBanner}"
+              Classes.error="{Binding BannerIsError}">
+        <Grid ColumnDefinitions="*,Auto,Auto">
+          <StackPanel Spacing="2">
+            <TextBlock x:Name="BannerText"
+                       FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2"
+                       svc:LineClamp.Text="{Binding BannerText}"/>
+            <TextBlock x:Name="BannerDetail" Classes="muted" FontSize="12"
+                       TextWrapping="Wrap" MaxLines="1"
+                       IsVisible="{Binding HasBannerDetail}"
+                       svc:LineClamp.Text="{Binding BannerDetail}"/>
+          </StackPanel>
+          <Button x:Name="BannerRetry" Grid.Column="1" Classes="ghost"
+                  Content="{DynamicResource Ui.Retry}"
+                  Command="{Binding RetryCommand}"
+                  IsVisible="{Binding HasRetry}" Margin="8,0,0,0"/>
+          <Button x:Name="BannerClose" Grid.Column="2" Classes="ghost"
+                  Content="✕" Command="{Binding DismissBannerCommand}"
+                  Width="32" Padding="0"/>
+        </Grid>
+      </Border>
+
+      <!-- Pack card (BAMod panel with 118×118 preview) -->
+      <Border Grid.Row="1" Classes="card" Margin="0,0,0,14">
+        <Grid x:Name="ActionBar" ColumnDefinitions="118,*" ColumnSpacing="16">
+          <Border Classes="preview">
+            <Panel>
+              <TextBlock Text="📦" FontSize="36" HorizontalAlignment="Center"
+                         VerticalAlignment="Center" Opacity="0.35"
+                         IsVisible="{Binding !HasPreview}"/>
+              <Image Source="{Binding PreviewImage}" Stretch="UniformToFill"
+                     IsVisible="{Binding HasPreview}"/>
+            </Panel>
+          </Border>
+
+          <StackPanel Grid.Column="1" Spacing="4">
+            <TextBlock Classes="muted" FontSize="11" FontWeight="SemiBold" Text="MODPACK"/>
+
+            <Button x:Name="PackPicker" Classes="ghost"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Padding="0" MinHeight="28"
+                    IsEnabled="{Binding HasPackChoice}">
+              <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedLeft" ItemsSource="{Binding Packs}">
+                  <MenuFlyout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PackChoice">
+                      <MenuItem Header="{Binding Name}"
+                                Command="{Binding Select}"
+                                CommandParameter="{Binding Repo}"/>
+                    </DataTemplate>
+                  </MenuFlyout.ItemTemplate>
+                </MenuFlyout>
+              </Button.Flyout>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock x:Name="PackName" Text="{Binding PackTitle}"
+                           FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                <Path x:Name="PackChevron" Grid.Column="1" Margin="8,0,0,0"
+                      Width="10" Height="6" Stretch="Uniform"
+                      Fill="{DynamicResource ActualArrow.Muted}"
+                      Data="M0,0 L5,6 L10,0 Z"
+                      IsVisible="{Binding HasPackChoice}"/>
+              </Grid>
+            </Button>
+
+            <TextBlock x:Name="InstalledVersion" Classes="muted"
+                       Text="{Binding InstalledText}" TextTrimming="CharacterEllipsis"/>
+
+            <Border x:Name="Chip" Classes="chip" HorizontalAlignment="Left" Margin="0,4,0,0"
+                    Classes.ok="{Binding ChipOk}"
+                    Classes.warn="{Binding ChipWarn}"
+                    Classes.error="{Binding ChipError}">
+              <TextBlock Text="{Binding ChipText}" FontSize="11" FontWeight="SemiBold"/>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Primary actions -->
+      <Button x:Name="PlayModded" Grid.Row="2" Classes="primary" Margin="0,0,0,8"
+              Command="{Binding PlayModdedCommand}"
+              Content="{DynamicResource Ui.PlayModded}"/>
+
+      <Button x:Name="PlayVanilla" Grid.Row="3" Margin="0,0,0,6"
+              Command="{Binding PlayVanillaCommand}"
+              Content="{DynamicResource Ui.PlayVanilla}"/>
+
+      <TextBlock x:Name="PlaySubtitle" Grid.Row="4" Classes="muted"
+                 Text="{Binding PlaySubtitle}" TextWrapping="Wrap"
+                 VerticalAlignment="Top" Margin="0,0,0,8"/>
+
+      <!-- Work / progress (BAMod thin bar) -->
+      <Grid x:Name="WorkPanel" Grid.Row="5" RowDefinitions="Auto,Auto,Auto,Auto"
+            IsVisible="{Binding IsWorking}" Margin="0,4,0,0">
+        <TextBlock x:Name="ProgressText" Text="{Binding ProgressText}"
+                   FontWeight="SemiBold" Margin="0,0,0,6"/>
+        <!-- Swap HazardBar for thin ProgressBar in concept; keep name Progress for code -->
+        <!-- Keep name Progress for code-behind; style HazardBar thinly or swap to ProgressBar -->
+        <ProgressBar x:Name="Progress" Grid.Row="1" Classes="thin" Margin="0,0,0,8"
+                     IsIndeterminate="{Binding ProgressIndeterminate}"
+                     Minimum="0" Maximum="100"/>
+        <TextBlock x:Name="StatusLine" Grid.Row="2" Classes="muted"
+                   Text="{Binding StatusText}" TextTrimming="CharacterEllipsis"
+                   Margin="0,0,0,8"/>
+        <Button x:Name="Cancel" Grid.Row="3" Classes="ghost"
+                Content="{DynamicResource Ui.Cancel}"
+                Command="{Binding CancelCommand}"
+                IsVisible="{Binding ShowCancel}"
+                HorizontalAlignment="Left"/>
+      </Grid>
+    </Grid>
+
+    <!-- Footer: settings + version (BAMod bottom ghost) -->
+    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="0,10,0,0">
+      <Button x:Name="More" Classes="ghost" MinHeight="34" Padding="10,6">
+        <Button.Flyout>
+          <MenuFlyout Placement="TopEdgeAlignedLeft">
+            <MenuItem x:Name="Verify" Header="{DynamicResource Ui.Verify}"
+                      Command="{Binding VerifyCommand}"/>
+            <MenuItem x:Name="GameFolder" Header="{DynamicResource Ui.GameFolder}"
+                      Command="{Binding OpenGameFolderCommand}"/>
+            <MenuItem x:Name="ModLog" Header="{DynamicResource Ui.ModLog}"
+                      Command="{Binding OpenModLogCommand}"/>
+            <Separator/>
+            <MenuItem x:Name="Settings" Header="{DynamicResource Ui.Settings}"
+                      Command="{Binding OpenSettingsCommand}"/>
+            <Separator/>
+            <MenuItem x:Name="Uninstall" Classes="danger"
+                      Header="{DynamicResource Ui.Uninstall}"
+                      Command="{Binding UninstallCommand}"/>
+          </MenuFlyout>
+        </Button.Flyout>
+        <TextBlock Text="{DynamicResource Ui.Settings}"/>
+      </Button>
+
+      <TextBlock x:Name="VersionLabel" Grid.Column="2" Classes="muted"
+                 VerticalAlignment="Center" FontSize="11"
+                 Text="{Binding VersionText}"/>
+    </Grid>
+  </Grid>
+</Window>

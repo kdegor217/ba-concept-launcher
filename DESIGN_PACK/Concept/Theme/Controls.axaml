@@ -1,0 +1,72 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="TextBlock.muted">
+    <Setter Property="Foreground" Value="{DynamicResource ActualArrow.Muted}"/>
+  </Style>
+
+  <Style Selector="TextBlock.brand">
+    <Setter Property="FontFamily" Value="{DynamicResource ActualArrow.Font.Brand}"/>
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="{DynamicResource ActualArrow.Accent}"/>
+    <Setter Property="LetterSpacing" Value="1.2"/>
+  </Style>
+
+  <Style Selector="TextBlock.title">
+    <Setter Property="FontFamily" Value="{DynamicResource ActualArrow.Font.Heading}"/>
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="Foreground" Value="{DynamicResource ActualArrow.Text}"/>
+  </Style>
+
+  <Style Selector="Border.card">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.Panel}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ActualArrow.Radius}"/>
+    <Setter Property="Padding" Value="16"/>
+  </Style>
+
+  <Style Selector="Border.banner">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.AccentTint}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ActualArrow.Accent}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ActualArrow.Radius.Sm}"/>
+    <Setter Property="Padding" Value="12,10"/>
+  </Style>
+  <Style Selector="Border.banner.error">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.DangerTint}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ActualArrow.Danger}"/>
+  </Style>
+
+  <Style Selector="Border.chip">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.MutedTint}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ActualArrow.Radius.Pill}"/>
+    <Setter Property="Padding" Value="8,3"/>
+  </Style>
+  <Style Selector="Border.chip.ok">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.OkTint}"/>
+  </Style>
+  <Style Selector="Border.chip.warn">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.WarningTint}"/>
+  </Style>
+  <Style Selector="Border.chip.error">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.DangerTint}"/>
+  </Style>
+
+  <Style Selector="Border.preview">
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.PanelSunken}"/>
+    <Setter Property="CornerRadius" Value="{DynamicResource ActualArrow.Radius.Sm}"/>
+    <Setter Property="ClipToBounds" Value="True"/>
+    <Setter Property="Width" Value="118"/>
+    <Setter Property="Height" Value="118"/>
+  </Style>
+
+  <!-- Thin progress like BAMod ThinProgress -->
+  <Style Selector="ProgressBar.thin">
+    <Setter Property="MinHeight" Value="4"/>
+    <Setter Property="Height" Value="4"/>
+    <Setter Property="Background" Value="{DynamicResource ActualArrow.PanelSunken}"/>
+    <Setter Property="Foreground" Value="{DynamicResource ActualArrow.Accent}"/>
+    <Setter Property="CornerRadius" Value="2"/>
+  </Style>
+</Styles>

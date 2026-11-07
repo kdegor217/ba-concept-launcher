@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ConceptApp.ViewModels"
+        x:Class="ConceptApp.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Icon="/Assets/app.ico"
+        Title="{Binding Title}"
+        Width="460"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AA.BackgroundBrush}"
+        Foreground="{DynamicResource AA.TextBrush}"
+        FontFamily="Inter, Segoe UI, $Default"
+        FontSize="13">
+
+  <Grid RowDefinitions="Auto,Auto,Auto" Margin="24,20,24,18">
+    <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" Margin="0,0,0,14"/>
+
+    <StackPanel Grid.Row="1" Spacing="12">
+
+      <StackPanel Spacing="6">
+        <TextBlock Classes="muted" FontSize="11" FontWeight="SemiBold" Text="{Binding GameDirLabel}"/>
+        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+          <TextBox Text="{Binding GameDir}" Watermark="Steam / Broken Arrow" MinHeight="36"/>
+          <Button Grid.Column="1" Classes="secondary" Content="{Binding BrowseLabel}"
+                  Command="{Binding BrowseCommand}" MinWidth="88"/>
+          <Button Grid.Column="2" Classes="ghost" Content="{Binding AutoDetectLabel}"
+                  Command="{Binding AutoDetectCommand}"
+                  IsEnabled="{Binding !IsDetecting}"/>
+        </Grid>
+        <TextBlock Classes="muted" FontSize="12" Text="{Binding GameDirHint}"/>
+      </StackPanel>
+
+      <StackPanel Spacing="6">
+        <TextBlock Classes="muted" FontSize="11" FontWeight="SemiBold" Text="{Binding LanguageLabel}"/>
+        <ComboBox ItemsSource="{Binding Languages}"
+                  SelectedItem="{Binding SelectedLanguage}"
+                  MinHeight="36" HorizontalAlignment="Stretch"/>
+      </StackPanel>
+
+      <StackPanel Spacing="6">
+        <TextBlock Classes="muted" FontSize="11" FontWeight="SemiBold" Text="{Binding LayoutLabel}"/>
+        <ComboBox ItemsSource="{Binding LayoutOptions}"
+                  SelectedItem="{Binding SelectedLayoutOption}"
+                  MinHeight="36" HorizontalAlignment="Stretch"/>
+      </StackPanel>
+
+      <CheckBox IsChecked="{Binding CloseOnLaunch}"
+                Content="{Binding CloseOnLaunchLabel}"/>
+
+      <!-- Danger zone: uninstall -->
+      <Border Margin="0,4,0,0" Padding="14" CornerRadius="8"
+              Background="#281818" BorderBrush="#6A3330" BorderThickness="1">
+        <StackPanel Spacing="10">
+          <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="#E55B52"
+                     Text="{Binding DangerZoneLabel}"/>
+          <TextBlock Classes="muted" FontSize="12" TextWrapping="Wrap"
+                     Text="{Binding UninstallHint}"/>
+          <Button Classes="danger" HorizontalAlignment="Left"
+                  Content="{Binding UninstallLabel}"
+                  Command="{Binding UninstallCommand}"
+                  IsVisible="{Binding ModInstalled}"
+                  IsEnabled="{Binding !IsUninstalling}"/>
+          <TextBlock Classes="muted" FontSize="12"
+                     IsVisible="{Binding !ModInstalled}"
+                     Text="{Binding StatusMessage}"/>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Classes="muted" FontSize="12" Text="{Binding StatusMessage}"
+                 IsVisible="{Binding ModInstalled}" MinHeight="18"/>
+    </StackPanel>
+
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,14,0,0" ColumnSpacing="8">
+      <Button Grid.Column="1" Classes="ghost" Content="{Binding CancelLabel}"
+              Command="{Binding CancelCommand}" MinWidth="96" MinHeight="36"/>
+      <Button Grid.Column="2" Classes="primary compact" Content="{Binding SaveLabel}"
+              Command="{Binding SaveCommand}" MinWidth="110"/>
+    </Grid>
+  </Grid>
+</Window>

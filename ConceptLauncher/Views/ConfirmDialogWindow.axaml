@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ConceptApp.ViewModels"
+        x:Class="ConceptApp.Views.ConfirmDialogWindow"
+        x:DataType="vm:ConfirmDialogViewModel"
+        Icon="/Assets/app.ico"
+        Title="{Binding Title}"
+        Width="{Binding DialogWidth}"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AA.BackgroundBrush}"
+        Foreground="{DynamicResource AA.TextBrush}"
+        FontFamily="Inter, Segoe UI, $Default"
+        FontSize="13">
+
+  <Border x:Name="RootBorder" Padding="22,20">
+    <StackPanel Spacing="14">
+      <TextBlock x:Name="TitleBlock" Text="{Binding Title}" FontSize="18" FontWeight="Bold"/>
+      <TextBlock Text="{Binding Message}" TextWrapping="Wrap" LineHeight="20"/>
+
+      <Border IsVisible="{Binding HasItems}"
+              Background="{DynamicResource AA.PanelBrush}"
+              CornerRadius="6" Padding="12,10">
+        <ItemsControl ItemsSource="{Binding Items}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" Classes="muted" Margin="0,2" TextWrapping="Wrap"/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+
+      <TextBlock IsVisible="{Binding HasHint}" Text="{Binding Hint}"
+                 Classes="muted" FontSize="12" TextWrapping="Wrap"/>
+
+      <CheckBox IsVisible="{Binding HasCheckbox}"
+                IsChecked="{Binding IsChecked}"
+                Content="{Binding CheckboxText}"/>
+
+      <StackPanel x:Name="ButtonsHost" Orientation="Horizontal" Spacing="8"
+                  HorizontalAlignment="Right" Margin="0,6,0,0"/>
+    </StackPanel>
+  </Border>
+</Window>
