@@ -225,4 +225,78 @@
   <Style Selector="TextBlock.muted">
     <Setter Property="Foreground" Value="{DynamicResource AA.MutedBrush}"/>
   </Style>
+
+  <!-- E Rail buttons -->
+  <Style Selector="Button.rail">
+    <Setter Property="Width" Value="44"/>
+    <Setter Property="Height" Value="44"/>
+    <Setter Property="MinWidth" Value="44"/>
+    <Setter Property="MinHeight" Value="44"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource AA.MutedBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius" Value="8"/>
+    <Setter Property="FontSize" Value="16"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Content="{TemplateBinding Content}"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.rail:pointerover /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource AA.SurfaceBrush}"/>
+  </Style>
+  <Style Selector="Button.rail:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource AA.TextBrush}"/>
+  </Style>
+  <Style Selector="Button.rail.primary">
+    <Setter Property="Background" Value="{DynamicResource AA.AccentBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource AA.OnAccentBrush}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+  </Style>
+  <Style Selector="Button.rail.primary:pointerover /template/ Border">
+    <Setter Property="Background" Value="{DynamicResource AA.AccentHoverBrush}"/>
+  </Style>
+
+  <!-- G Night HUD play -->
+  <Style Selector="Button.hudplay">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource AA.AccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AA.AccentBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="MinHeight" Value="48"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Button.hudplay:pointerover /template/ Border">
+    <Setter Property="Background" Value="#1FE2A23A"/>
+  </Style>
 </Styles>

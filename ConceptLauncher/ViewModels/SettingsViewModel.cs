@@ -119,6 +119,9 @@ public partial class SettingsViewModel : ViewModelBase
 	[
 		new LayoutOption(ConceptLayout.B, _loc.T("Ui.LayoutB")),
 		new LayoutOption(ConceptLayout.D, _loc.T("Ui.LayoutD")),
+		new LayoutOption(ConceptLayout.E, _loc.T("Ui.LayoutE")),
+		new LayoutOption(ConceptLayout.G, _loc.T("Ui.LayoutG")),
+		new LayoutOption(ConceptLayout.H, _loc.T("Ui.LayoutH")),
 	];
 
 	private void RefreshLayoutOptions()

@@ -13,8 +13,32 @@ public sealed class ConceptPrefs
 		Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
 	};
 
-	public ConceptLayout Layout { get; set; } = ConceptLayout.B;
+	public ConceptLayout Layout { get; set; } = CompileTimeDefault;
 	public string UiLanguage { get; set; } = "ru";
+	/// <summary>Stamp so switching between E/G/H release builds resets the default layout.</summary>
+	public string BuiltVariant { get; set; } = CompileTimeVariant;
+
+	public static ConceptLayout CompileTimeDefault =>
+#if LAYOUT_E
+		ConceptLayout.E;
+#elif LAYOUT_G
+		ConceptLayout.G;
+#elif LAYOUT_H
+		ConceptLayout.H;
+#else
+		ConceptLayout.B;
+#endif
+
+	public static string CompileTimeVariant =>
+#if LAYOUT_E
+		"E";
+#elif LAYOUT_G
+		"G";
+#elif LAYOUT_H
+		"H";
+#else
+		"";
+#endif
 
 	public static string FilePath =>
 		Path.Combine(
@@ -24,23 +48,40 @@ public sealed class ConceptPrefs
 
 	public static ConceptPrefs Load()
 	{
+		ConceptPrefs prefs;
 		try
 		{
 			if (!File.Exists(FilePath))
-				return new ConceptPrefs();
-			var json = File.ReadAllText(FilePath);
-			return JsonSerializer.Deserialize<ConceptPrefs>(json, JsonOptions) ?? new ConceptPrefs();
+				prefs = new ConceptPrefs();
+			else
+			{
+				var json = File.ReadAllText(FilePath);
+				prefs = JsonSerializer.Deserialize<ConceptPrefs>(json, JsonOptions) ?? new ConceptPrefs();
+			}
 		}
 		catch
 		{
-			return new ConceptPrefs();
+			prefs = new ConceptPrefs();
 		}
+
+		// Fixed variant builds always open on their concept when the stamp differs.
+		if (!string.IsNullOrEmpty(CompileTimeVariant) &&
+		    !string.Equals(prefs.BuiltVariant, CompileTimeVariant, StringComparison.Ordinal))
+		{
+			prefs.Layout = CompileTimeDefault;
+			prefs.BuiltVariant = CompileTimeVariant;
+			prefs.Save();
+		}
+
+		return prefs;
 	}
 
 	public void Save()
 	{
 		try
 		{
+			if (!string.IsNullOrEmpty(CompileTimeVariant))
+				BuiltVariant = CompileTimeVariant;
 			Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
 			File.WriteAllText(FilePath, JsonSerializer.Serialize(this, JsonOptions));
 		}

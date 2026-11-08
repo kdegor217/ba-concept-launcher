@@ -26,7 +26,10 @@ public sealed class BranchItem
 public enum ConceptLayout
 {
 	B,
-	D
+	D,
+	E,
+	G,
+	H
 }
 
 public partial class MainViewModel : ViewModelBase, IDisposable
@@ -38,6 +41,8 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 	private readonly ConceptPrefs _prefs;
 	private IReadOnlyList<PackCatalogEntry> _catalogEntries = Array.Empty<PackCatalogEntry>();
 	private bool _initialized;
+	private StatusMessage? _lastStatus;
+	private Banner? _lastBanner;
 
 	public Loc Loc { get; }
 	public IGameLocator Locator => _locator;
@@ -63,10 +68,19 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 	[ObservableProperty] private string _packRepo = ActualArrow.Core.Brand.DefaultPackRepo;
 	[ObservableProperty] private bool _closeOnLaunch;
 	[ObservableProperty] private bool _modInstalled;
+	[ObservableProperty] private bool _hasWizardError;
+	[ObservableProperty] private string _wizardErrorTitle = "";
+	[ObservableProperty] private string _wizardErrorDetail = "";
 
 	public bool LastUninstallRemoveUserData { get; set; }
 	public bool IsLayoutB => Layout == ConceptLayout.B;
 	public bool IsLayoutD => Layout == ConceptLayout.D;
+	public bool IsLayoutE => Layout == ConceptLayout.E;
+	public bool IsLayoutG => Layout == ConceptLayout.G;
+	public bool IsLayoutH => Layout == ConceptLayout.H;
+	public bool ShowWizardExpand => IsBusy || HasWizardError;
+	public bool ShowWizardBusy => IsBusy;
+	public bool ShowWizardErrorPanel => !IsBusy && HasWizardError;
 
 	public ObservableCollection<BranchItem> Branches { get; } =
 	[
@@ -151,7 +165,6 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 		if (string.IsNullOrWhiteSpace(manifestName))
 			return "ActualArrow";
 
-		// GitHub slug like Leha_Arrow_mods — show product name instead
 		if (manifestName.Contains('_', StringComparison.Ordinal) ||
 		    manifestName.Contains("Leha", StringComparison.OrdinalIgnoreCase))
 			return "ActualArrow";
@@ -173,10 +186,14 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 		ProgressText = state.Progress is null ? "" : Loc.T("Status." + state.Progress.Kind, state.Progress.Kind);
 		if (ProgressText.StartsWith("Status.", StringComparison.Ordinal))
 			ProgressText = state.Progress?.Kind.ToString() ?? "";
+		_lastStatus = state.Status;
+		_lastBanner = state.Banner;
 		Status = StatusFormatter.Format(Loc, state.Status);
 		ChipText = UpdateAvailable
 			? Loc.T("Ui.UpdateAvailable", LatestText)
 			: (ModInstalled ? Loc.T("Ui.UpToDate") : Loc.T("Pack.NotInstalled"));
+
+		UpdateWizardError(state);
 
 		if (!string.IsNullOrWhiteSpace(state.PreviewImagePath) && File.Exists(state.PreviewImagePath))
 		{
@@ -195,39 +212,113 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 		PlayCommand.NotifyCanExecuteChanged();
 		VanillaCommand.NotifyCanExecuteChanged();
 		CancelCommand.NotifyCanExecuteChanged();
+		RetryCommand.NotifyCanExecuteChanged();
+	}
+
+	private void UpdateWizardError(LauncherState state)
+	{
+		var key = state.Banner?.Message.Key ?? state.Status?.Key;
+		var isProblem = !state.IsBusy && key is not null &&
+			(key.StartsWith("Error.", StringComparison.Ordinal) ||
+			 key.Equals("Notice.GameNotFound", StringComparison.Ordinal) ||
+			 key.Equals("Play.NeedsGameDir", StringComparison.Ordinal));
+
+		if (!isProblem && !state.IsBusy &&
+		    (state.Banner?.Severity is BannerSeverity.Error or BannerSeverity.Warning) &&
+		    state.Banner.Message.Key.Equals("Notice.GameNotFound", StringComparison.Ordinal))
+			isProblem = true;
+
+		if (!isProblem && !state.IsBusy && string.IsNullOrWhiteSpace(GameDir) && _initialized)
+		{
+			isProblem = true;
+			key = "Notice.GameNotFound";
+		}
+
+		HasWizardError = isProblem;
+		if (!isProblem)
+		{
+			WizardErrorTitle = "";
+			WizardErrorDetail = "";
+			return;
+		}
+
+		WizardErrorTitle = StatusFormatter.Format(Loc, state.Banner?.Message ?? state.Status ?? StatusMessage.Of(key ?? "Notice.GameNotFound"));
+		WizardErrorDetail = state.Banner?.Detail is null
+			? Loc.T("Ui.WizardErrorHint")
+			: StatusFormatter.Format(Loc, state.Banner.Detail);
+		OnPropertyChanged(nameof(ShowWizardExpand));
+		OnPropertyChanged(nameof(ShowWizardBusy));
+		OnPropertyChanged(nameof(ShowWizardErrorPanel));
 	}
 
 	partial void OnLayoutChanged(ConceptLayout value)
 	{
 		OnPropertyChanged(nameof(IsLayoutB));
 		OnPropertyChanged(nameof(IsLayoutD));
+		OnPropertyChanged(nameof(IsLayoutE));
+		OnPropertyChanged(nameof(IsLayoutG));
+		OnPropertyChanged(nameof(IsLayoutH));
 		ApplyLayoutSize();
 		RefreshLocalized();
 	}
 
+	partial void OnIsBusyChanged(bool value)
+	{
+		OnPropertyChanged(nameof(ShowWizardExpand));
+		OnPropertyChanged(nameof(ShowWizardBusy));
+		OnPropertyChanged(nameof(ShowWizardErrorPanel));
+		ApplyLayoutSize();
+	}
+
+	partial void OnHasWizardErrorChanged(bool value)
+	{
+		OnPropertyChanged(nameof(ShowWizardExpand));
+		OnPropertyChanged(nameof(ShowWizardBusy));
+		OnPropertyChanged(nameof(ShowWizardErrorPanel));
+		ApplyLayoutSize();
+	}
+
 	private void ApplyLayoutSize()
 	{
-		if (Layout == ConceptLayout.B)
+		switch (Layout)
 		{
-			// Fixed card size
-			WindowSizeToContent = SizeToContent.Manual;
-			WindowWidth = 420;
-			WindowHeight = 520;
-		}
-		else
-		{
-			// Hug bar content — no trailing empty client area
-			WindowSizeToContent = SizeToContent.WidthAndHeight;
-			WindowWidth = double.NaN;
-			WindowHeight = double.NaN;
+			case ConceptLayout.B:
+				WindowSizeToContent = SizeToContent.Manual;
+				WindowWidth = 420;
+				WindowHeight = 520;
+				break;
+			case ConceptLayout.E:
+				WindowSizeToContent = SizeToContent.Manual;
+				WindowWidth = 560;
+				WindowHeight = 360;
+				break;
+			case ConceptLayout.G:
+				WindowSizeToContent = SizeToContent.Manual;
+				WindowWidth = 480;
+				WindowHeight = 560;
+				break;
+			case ConceptLayout.H:
+				WindowSizeToContent = SizeToContent.Height;
+				WindowWidth = 720;
+				WindowHeight = double.NaN;
+				break;
+			default: // D
+				WindowSizeToContent = SizeToContent.WidthAndHeight;
+				WindowWidth = double.NaN;
+				WindowHeight = double.NaN;
+				break;
 		}
 	}
 
 	public void RefreshLocalized()
 	{
-		if (!IsBusy && _launcher.State.Status is null)
+		if (!IsBusy && _launcher.State.Status is null && !HasWizardError)
 			Status = Loc.T("Ui.Ready");
-		PlayLabel = Layout == ConceptLayout.D ? Loc.T("Ui.PlayShort") : Loc.T("Ui.Play");
+		PlayLabel = Layout is ConceptLayout.D or ConceptLayout.H or ConceptLayout.E
+			? Loc.T("Ui.PlayShort")
+			: Loc.T("Ui.Play");
+		if (Layout == ConceptLayout.E)
+			PlayLabel = "▶";
 		ChipText = UpdateAvailable
 			? Loc.T("Ui.UpdateAvailable", LatestText)
 			: (ModInstalled ? Loc.T("Ui.UpToDate") : Loc.T("Pack.NotInstalled"));
@@ -239,19 +330,39 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 		OnPropertyChanged(nameof(ModpackLabel));
 		OnPropertyChanged(nameof(LayoutBLabel));
 		OnPropertyChanged(nameof(LayoutDLabel));
+		OnPropertyChanged(nameof(LayoutELabel));
+		OnPropertyChanged(nameof(LayoutGLabel));
+		OnPropertyChanged(nameof(LayoutHLabel));
+		OnPropertyChanged(nameof(HudCallsign));
+		OnPropertyChanged(nameof(HudSysReady));
+		OnPropertyChanged(nameof(VanillaHudLabel));
+		OnPropertyChanged(nameof(RetryLabel));
+		OnPropertyChanged(nameof(FixFolderLabel));
+		if (_lastBanner is not null || _lastStatus is not null)
+			UpdateWizardError(_launcher.State);
 	}
 
 	public string PackMetaLine => UpdateAvailable
 		? $"{InstalledText} → {LatestText} · {SelectedBranchName}"
 		: $"{InstalledText} · {SelectedBranchName}";
 
-	public string VanillaLabel => Layout == ConceptLayout.D ? Loc.T("Ui.VanillaShort") : Loc.T("Ui.Vanilla");
+	public string VanillaLabel => Layout is ConceptLayout.D or ConceptLayout.H
+		? Loc.T("Ui.VanillaShort")
+		: Loc.T("Ui.Vanilla");
+	public string VanillaHudLabel => Loc.T("Ui.VanillaHud");
 	public string CancelLabel => Loc.T("Ui.Cancel");
 	public string SettingsTip => Loc.T("Ui.Settings");
 	public string BrandSub => Loc.T("Brand.Sub");
 	public string ModpackLabel => Loc.T("Ui.Modpack");
 	public string LayoutBLabel => Loc.T("Ui.LayoutB");
 	public string LayoutDLabel => Loc.T("Ui.LayoutD");
+	public string LayoutELabel => Loc.T("Ui.LayoutE");
+	public string LayoutGLabel => Loc.T("Ui.LayoutG");
+	public string LayoutHLabel => Loc.T("Ui.LayoutH");
+	public string HudCallsign => Loc.T("Ui.HudCallsign");
+	public string HudSysReady => Loc.T("Ui.HudSysReady");
+	public string RetryLabel => Loc.T("Ui.Retry");
+	public string FixFolderLabel => Loc.T("Ui.FixFolder");
 
 	public async Task ApplySettingsAsync(SettingsViewModel settings)
 	{
@@ -327,6 +438,15 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 
 	[RelayCommand]
 	private void Settings() => SettingsRequested?.Invoke(this, EventArgs.Empty);
+
+	[RelayCommand(CanExecute = nameof(CanRetry))]
+	private async Task RetryAsync()
+	{
+		Status = Loc.T("Ui.Checking");
+		await _launcher.RefreshAsync();
+	}
+
+	private bool CanRetry() => !IsBusy;
 
 	public async Task UninstallAsync()
 	{

@@ -9,6 +9,14 @@
     <RootNamespace>ConceptApp</RootNamespace>
     <AssemblyName>ConceptApp</AssemblyName>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <!-- Fixed release builds: -p:LauncherVariant=E|G|H -->
+    <LauncherVariant Condition="'$(LauncherVariant)' == ''"></LauncherVariant>
+  </PropertyGroup>
+
+  <!-- Keep AssemblyName=ConceptApp so avares://ConceptApp/... stays valid. -->
+  <PropertyGroup Condition="'$(LauncherVariant)' != ''">
+    <Product>ActualArrow Launcher — $(LauncherVariant)</Product>
+    <DefineConstants>$(DefineConstants);LAYOUT_$(LauncherVariant)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
